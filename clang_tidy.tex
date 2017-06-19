@@ -1,0 +1,129 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[german]{babel}
+\usepackage{graphics}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{language=c++}
+
+\usetheme{Berlin}
+
+\title{Sauberes C++ mit clang-tidy}
+\institute{Linux Tag Tübingen 2017}
+\author{Peter Hrenka}
+\date{24. Juni 2016}
+
+\begin{document}
+\begin{frame}
+\titlepage
+\end{frame}
+\begin{frame}
+  \frametitle{Über mich}
+  \begin{itemize}
+    \item Linux Anwender seit 1995
+    \item Studium Informatik und Mathematik in Tübingen
+    \item Sofwareentwickler \texttt{C++}, \texttt{python}, OpenGL
+    \item regelmäßig auf OpenSource Konferenzen anzutreffen
+    \item Programmiersprachenjunkie
+  \end{itemize}
+\end{frame}
+\section*{Übersicht}
+\begin{frame}
+  \tableofcontents
+\end{frame}
+\section{Einführung}
+\begin{frame}
+  \frametitle{Sauberer Code}
+  \begin{itemize}
+  \item Sauberkeit ist subjektiv
+    \pause % Bilder (Kinderzimmer?)
+  \item Garantiert nicht Fehlerfreiheit
+    \pause
+  \item $\ldots$ Terminierung
+    \pause
+  \item Lesbarkeit ist aber hilfreich für
+  \item $\ldots$ Fehlersuche
+    \pause
+  \item $\ldots$ Weiterentwicklung
+    \pause
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{Statische Analyse}
+  \begin{itemize}
+  \item Programme nur anhand des Quelltextes analysieren
+    \pause
+  \item Implizit vom Compiler: Warnungen
+    \pause % listing mit gcc warnung
+  \item Früher \texttt{lint} \\
+    \qquad \url{https://de.wikipedia.org/wiki/Lint_\%28Programmierwerkzeug\%29}
+    \pause
+  \item viele kommerzielle Anbieter\\
+    \qquad Bauhaus \url{https://en.wikipedia.org/wiki/Bauhaus_Project_(computing)}\\
+    \pause
+    \qquad Covertiy \url{https://en.wikipedia.org/wiki/Coverity}\\
+    \pause
+  \item aber auch OpenSource Lösungen\\
+    \qquad Coqinelle
+    \pause
+    \qquad clang-tidy
+    \pause
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{clang-tidy}
+  \begin{itemize}
+  \item Projekt innerhalb des llvm-Ökosystems\\
+    \qquad \url{http://llvm.org}
+    \pause
+  \item Eher unbekannt
+    \pause
+  \item Callback Interface für Parser
+    \pause \\
+    \qquad $\rightarrow$ Mehrere Tests parallel durchführbar
+    \pause
+  \item Kann Fix-Hints generieren 
+    \pause \\
+  \qquad $\rightarrow$ Automatische Korrekturen möglich    
+  \end{itemize}
+\end{frame}
+\section{clang-tidy benutzen}
+\begin{frame}
+  \frametitle{Installation}
+\end{frame}
+\begin{frame}
+  \frametitle{Vorbereitung}
+\end{frame}
+\begin{frame}
+  \frametitle{Aufruf}
+\end{frame}
+\begin{frame}
+  \frametitle{Demo}
+\end{frame}
+\section{clang-tidy erweitern}
+\begin{frame}
+  \frametitle{Installation}
+\end{frame}
+\begin{lstlisting}[language=bash]
+  % git clone http://llvm.org/git/llvm.git
+  % cd llvm/tools
+  % git clone http://llvm.org/git/clang.git
+  % cd llvm/tools/clang/tools
+  % git clone http://llvm.org/git/clang-tools-extra.git extra
+ \end{lstlisting}
+\begin{frame}
+  \frametitle{Installation}
+\end{frame}
+\begin{frame}
+  \frametitle{Installation}
+\end{frame}
+\begin{frame}
+  \begin{center}
+    \Huge{Vielen Dank!}\\
+    ~\\
+    ~\\
+    \Large{Fragen?}
+  \end{center}
+\end{frame}
+\end{document}
