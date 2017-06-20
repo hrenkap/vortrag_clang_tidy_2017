@@ -40,9 +40,10 @@
     \pause % Bilder (Kinderzimmer?)
   \item Garantiert nicht Fehlerfreiheit
     \pause
-  \item $\ldots$ Terminierung
+  \item $\ldots$ oder Terminierung
     \pause
   \item Lesbarkeit ist aber hilfreich für
+    \pause
   \item $\ldots$ Fehlersuche
     \pause
   \item $\ldots$ Weiterentwicklung
@@ -65,7 +66,8 @@
     \qquad Covertiy \url{https://en.wikipedia.org/wiki/Coverity}\\
     \pause
   \item aber auch OpenSource Lösungen\\
-    \qquad Coqinelle
+    \pause
+    \qquad Coqinelle\\
     \pause
     \qquad clang-tidy
     \pause
@@ -79,9 +81,15 @@
     \pause
   \item Eher unbekannt
     \pause
-  \item Callback Interface für Parser
+  \item Dokumentation 
+    \pause
+  \item Callback Interface für Knoten des abstrakten Syntaxbaums (AST)
     \pause \\
     \qquad $\rightarrow$ Mehrere Tests parallel durchführbar
+    \pause
+  \item Zugriff auf Preprozessor-Definitionen
+    \pause
+  \item Auch Kommentare können direkt ausgelesen werden
     \pause
   \item Kann Fix-Hints generieren 
     \pause \\
@@ -347,6 +355,11 @@
     \qquad \url{https://google.github.io/styleguide/cppguide.html}
   \item LLVM Style Guide\\
     \qquad \url{http://llvm.org/docs/CodingStandards.html}
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{Check-Gruppen}
+  \begin{itemize}
   \item \texttt{modernize-*} : Modernisierungen, ehemals \texttt{clang-modernize}\\
     Gelegenheiten Code durch modernere Sprachfeatures zu verbessern
   \item \texttt{performance-*} : Potentielle Performance-Verbesserungen
@@ -354,13 +367,83 @@
   \item \texttt{misc-*} : Alles ohne bessere Kategorie
   \end{itemize}
 \end{frame}
-\begin{frame}
-  \frametitle{Demo}
+\begin{frame}[fragile]
+  \frametitle{Beispiel}
+  \begin{itemize}
+  \item Ein altes C++-Programm modernisieren\\
+    \texttt{\% clang-tidy -check=modernize-* -fix example.cpp -- -std=c++11}
+  \end{itemize}
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{Beispiel}
+\lstinputlisting[lastline=12, language=C++, basicstyle=\small\ttfamily, keywordstyle=\color{blue}]{example_orig.cpp}
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{Beispiel}
+  \lstinputlisting[firstline=13, language=C++, basicstyle=\small\ttfamily, keywordstyle=\color{blue}]{example_orig.cpp}
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{Beispiel}
+  \begin{itemize}
+  \item Ausgabe:
+  \end{itemize}
+  \begin{lstlisting}[language=bash, basicstyle=\tiny\ttfamily, keywordstyle=]
+   119 warnings generated.
+example.cpp:7:3: warning: use '= default' to define a trivial default constructor [modernize-use-default]
+  Base() {}
+  ^
+         = default;
+example.cpp:7:10: note: FIX-IT applied suggested code changes
+  Base() {}
+         ^
+example.cpp:10:24: warning: use nullptr [modernize-use-nullptr]
+    return (val_ptr != NULL ? *val_ptr : 0);
+                       ^
+                       nullptr
+example.cpp:10:24: note: FIX-IT applied suggested code changes
+    return (val_ptr != NULL ? *val_ptr : 0);
+                       ^
+example.cpp:16:7: warning: annotate this function with 'override' or (rarely) 'final' [modernize-use-override]
+  int method(int* val_ptr) const {
+      ^
+                                 override
+\end{lstlisting}
+\end{frame}
+\begin{frame}[fragile]
+\begin{lstlisting}[language=bash, basicstyle=\tiny\ttfamily, keywordstyle=]
+example.cpp:16:33: note: FIX-IT applied suggested code changes
+  int method(int* val_ptr) const {
+                                ^
+example.cpp:17:24: warning: use nullptr [modernize-use-nullptr]
+    return (val_ptr != NULL ? *val_ptr : 1);
+                       ^
+                       nullptr
+example.cpp:17:24: note: FIX-IT applied suggested code changes
+    return (val_ptr != NULL ? *val_ptr : 1);
+                       ^
+example.cpp:24:8: warning: auto_ptr is deprecated, use unique_ptr instead [modernize-replace-auto-ptr]
+  std::auto_ptr<Base>  base_hold(new Derived());
+       ^
+       unique_ptr
+example.cpp:24:8: note: FIX-IT applied suggested code changes
+  std::auto_ptr<Base>  base_hold(new Derived());
+       ^
+clang-tidy applied 5 of 5 suggested fixes.
+Suppressed 114 warnings (114 in non-user code).
+Use -header-filter=.* to display errors from all non-system headers. 
+\end{lstlisting}
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{Beispiel}
+  \lstinputlisting[lastline=12, language=C++, basicstyle=\small\ttfamily, keywordstyle=\color{blue}, emph={default,nullptr}, emphstyle=\color{green}]{example.cpp}
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{Beispiel}
+  \lstinputlisting[firstline=13, language=C++, basicstyle=\small\ttfamily, keywordstyle=\color{blue}, emph={override,unique_ptr,nullptr}, emphstyle=\color{green}]{example.cpp}
 \end{frame}
 \section{clang-tidy erweitern}
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Installation}
-\end{frame}
   \begin{lstlisting}[language=bash, basicstyle=\small\ttfamily, keywordstyle=]
   % git clone http://llvm.org/git/llvm.git
   % cd llvm/tools
@@ -368,8 +451,6 @@
   % cd llvm/tools/clang/tools
   % git clone http://llvm.org/git/clang-tools-extra.git extra
   \end{lstlisting}
-\begin{frame}
-  \frametitle{Installation}
 \end{frame}
 \begin{frame}
   \frametitle{Installation}
