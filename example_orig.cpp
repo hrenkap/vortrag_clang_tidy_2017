@@ -13,7 +13,7 @@ public:
 class Derived : public Base {
 public:
   int method(int* val_ptr) const {
-    return (val_ptr != NULL ? *val_ptr : 1);
+    return (val_ptr != 0 ? *val_ptr : 1);
   }
 };
 

@@ -36,18 +36,25 @@
 \begin{frame}
   \frametitle{Sauberer Code}
   \begin{itemize}
+  \item Was ist sauberer Code?
   \item Sauberkeit ist subjektiv
     \pause % Bilder (Kinderzimmer?)
-  \item Garantiert nicht Fehlerfreiheit
+  \item Sauberkeit garantiert nicht
+    \begin{itemize}
+    \item Fehlerfreiheit \pause
+    \item Einhalten der Benutzererwartung \pause
+    \item Sicherheit \pause
+    \item Terminierung
+    \end{itemize}
     \pause
-  \item $\ldots$ oder Terminierung
-    \pause
-  \item Lesbarkeit ist aber hilfreich für
-    \pause
-  \item $\ldots$ Fehlersuche
-    \pause
-  \item $\ldots$ Weiterentwicklung
-    \pause
+  \item Sauberkeit ist aber hilfreich für
+    \begin{itemize}
+      \pause
+    \item Fehlersuche \pause
+    \item Weiterentwicklung \pause
+    \item Kommunikation \pause
+    \item Einarbeitung
+    \end{itemize}
   \end{itemize}
 \end{frame}
 \begin{frame}
@@ -60,17 +67,22 @@
   \item Früher \texttt{lint} \\
     \qquad \url{https://de.wikipedia.org/wiki/Lint_(Programmierwerkzeug)}
     \pause
-  \item viele kommerzielle Anbieter\\
-    \qquad Bauhaus \url{https://en.wikipedia.org/wiki/Bauhaus_Project_(computing)}\\
+  \item viele kommerzielle Anbieter
+    \begin{itemize}
+    \item \href{https://en.wikipedia.org/wiki/Bauhaus_Project_(computing)}{Bauhaus}
     \pause
-    \qquad Covertiy \url{https://en.wikipedia.org/wiki/Coverity}\\
+    \item \href{https://en.wikipedia.org/wiki/Coverity}{Covertiy}
+      \pause
+    \item \href{https://en.wikipedia.org/wiki/QA-C}{QA-C}
+    \end{itemize}
+  \item aber auch OpenSource Lösungen mit C++ Unterstützung
     \pause
-  \item aber auch OpenSource Lösungen\\
+    \begin{itemize}
+    \item \href{https://en.wikipedia.org/wiki/Cpplint}{cpplint}
     \pause
-    \qquad Coqinelle\\
-    \pause
-    \qquad clang-tidy
-    \pause
+    \item clang-tidy
+      \pause
+    \end{itemize}
   \end{itemize}
 \end{frame}
 \begin{frame}
@@ -130,11 +142,13 @@
     \pause \texttt{cmake -DCMAKE\_EXPORT\_COMPILE\_COMMANDS=ON /path/to/project}
     \pause
   \item erzeugt eine Compile-Database in einer Datei namens \texttt{compile\_commands.json}
+  \item Verwendbar mit allen Projekten, die CMake unterstützen
+  \item Kein Build notwendig, \texttt{cmake}-Aufruf genügt
   \end{itemize}
 \end{frame}
 % Auszug aus Datei
 \begin{frame}
-  \frametitle{Aufrufoptionen}
+  \frametitle{Aufrufoptionen für \texttt{clang-tidy}}
   \begin{itemize}
   \item \texttt{-checks=} Liste von durchzuführenden Checks\\
     \qquad auch mit Wildcards, z.B. \texttt{modernize-*}
@@ -145,7 +159,7 @@
 \begin{itemize}
 \item Alle verfügbaren Checks anzeigen
 \end{itemize}
-\begin{lstlisting}[language=bash, basicstyle=\small\ttfamily, keywordstyle=]
+\begin{lstlisting}[language=bash, basicstyle=\tiny\ttfamily, keywordstyle=]
     % clang-tidy-3.9 -checks=* -list-checks
     boost-use-to-string
     cert-dcl03-c
@@ -375,23 +389,20 @@
   \end{itemize}
 \end{frame}
 \begin{frame}[fragile]
-  \frametitle{Beispiel}
+  \frametitle{Beispiel, Originaldatei 1/2}
 \lstinputlisting[lastline=12, language=C++, basicstyle=\small\ttfamily, keywordstyle=\color{blue}]{example_orig.cpp}
 \end{frame}
 \begin{frame}[fragile]
-  \frametitle{Beispiel}
+  \frametitle{Beispiel, Originaldatei 2/2}
   \lstinputlisting[firstline=13, language=C++, basicstyle=\small\ttfamily, keywordstyle=\color{blue}]{example_orig.cpp}
 \end{frame}
 \begin{frame}[fragile]
-  \frametitle{Beispiel}
-  \begin{itemize}
-  \item Ausgabe:
-  \end{itemize}
+  \frametitle{Beispiel, Ausgabe 1/2}
   \begin{lstlisting}[language=bash, basicstyle=\tiny\ttfamily, keywordstyle=]
    119 warnings generated.
 example.cpp:7:3: warning: use '= default' to define a trivial default constructor [modernize-use-default]
   Base() {}
-  ^
+         ^
          = default;
 example.cpp:7:10: note: FIX-IT applied suggested code changes
   Base() {}
@@ -405,11 +416,12 @@ example.cpp:10:24: note: FIX-IT applied suggested code changes
                        ^
 example.cpp:16:7: warning: annotate this function with 'override' or (rarely) 'final' [modernize-use-override]
   int method(int* val_ptr) const {
-      ^
+                                 ^
                                  override
 \end{lstlisting}
 \end{frame}
 \begin{frame}[fragile]
+  \frametitle{Beispiel, Ausgabe 2/2}
 \begin{lstlisting}[language=bash, basicstyle=\tiny\ttfamily, keywordstyle=]
 example.cpp:16:33: note: FIX-IT applied suggested code changes
   int method(int* val_ptr) const {
@@ -433,28 +445,83 @@ Suppressed 114 warnings (114 in non-user code).
 Use -header-filter=.* to display errors from all non-system headers. 
 \end{lstlisting}
 \end{frame}
+
 \begin{frame}[fragile]
-  \frametitle{Beispiel}
+  \frametitle{Beispiel, modernisierte Datei 1/2}
   \lstinputlisting[lastline=12, language=C++, basicstyle=\small\ttfamily, keywordstyle=\color{blue}, emph={default,nullptr}, emphstyle=\color{green}]{example.cpp}
 \end{frame}
+
 \begin{frame}[fragile]
-  \frametitle{Beispiel}
+  \frametitle{Beispiel, modernisierte Datei 2/2}
   \lstinputlisting[firstline=13, language=C++, basicstyle=\small\ttfamily, keywordstyle=\color{blue}, emph={override,unique_ptr,nullptr}, emphstyle=\color{green}]{example.cpp}
 \end{frame}
 \section{clang-tidy erweitern}
+
 \begin{frame}[fragile]
   \frametitle{Installation}
-  \begin{lstlisting}[language=bash, basicstyle=\small\ttfamily, keywordstyle=]
+  \begin{itemize}
+  \item Akutellen Quelltext aus \texttt{git}-Mirror herunterladen
+  \item Brauche jeweils \texttt{llvm},  \texttt{clang} und \texttt{clang-tools-extra} 
+  \end{itemize}
+  \begin{lstlisting}[language=bash, basicstyle=\small\ttfamily,
+    keywordstyle=,emph={ extra}, emphstyle=\color{red}]
   % git clone http://llvm.org/git/llvm.git
   % cd llvm/tools
   % git clone http://llvm.org/git/clang.git
-  % cd llvm/tools/clang/tools
+  % cd clang/tools
   % git clone http://llvm.org/git/clang-tools-extra.git extra
   \end{lstlisting}
+  \begin{itemize}
+  \item ca. 1,1 GB Plattenplatz
+  \end{itemize}
 \end{frame}
+
 \begin{frame}
-  \frametitle{Installation}
+  \frametitle{Bauen}
+  \begin{itemize}
+  \item Eingebettet in \texttt{llvm}-build
+    \begin{itemize}
+    \item Etwas Schade, weil alles mitgebaut werden muss
+    \end{itemize}
+  \item Aufruf etwa\\
+    \qquad \texttt{\% mkdir build \&\& cd build \&\& cmake --build ../llvm}
+  \end{itemize}  
 \end{frame}
+
+\begin{frame}
+  \frametitle{}
+  \begin{itemize}
+    \item ToDo
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Fazit}
+  \begin{itemize}
+    \item[$+$] Mächtiges Tool zur Überprüfung von C++-Code
+    \item[$+$] Modernisierungen interessant für Updates auf C++11 
+      \begin{itemize}
+      \item[$-$] Leider kaum Features für C++14, C++17 enthalten
+      \end{itemize}
+    \item[$+$] Vernünftige C++11 API von \texttt{llvm} und \texttt{clang}  
+    \item[$-$] Build-Prozess sehr monolitisch, nur zusammen mit \texttt{llvm}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Weitere interessante Projekte}
+  \begin{itemize}
+    \item \texttt{scan-build} : Tool von \texttt{clang} um Teile der \texttt{clang-tidy} Checks auszuführen
+    \item \texttt{valgrind} : Bitgenaue Emulation mit Definiertheitstracking, Speicherchecker
+    \item Sanitize-Optionen mit Laufzeitchecks in \texttt{GCC} und \texttt{clang}
+      \begin{itemize}
+      \item \texttt{-fsanitize=undefined} : Checks auf \href{https://blog.regehr.org/archives/213}{undefiniertes Verhalten}
+      \item \texttt{-fsanitize=signed-integer-overflow} : Prüfe auf Überlauf von Integern
+      \end{itemize}
+    \item \texttt{klee} : Symbolische Ausführung von LLVM Code
+    \end{itemize}
+\end{frame}
+
 \begin{frame}
   \begin{center}
     \Huge{Vielen Dank!}\\
