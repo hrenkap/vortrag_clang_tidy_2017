@@ -489,11 +489,125 @@ Use -header-filter=.* to display errors from all non-system headers.
 \end{frame}
 
 \begin{frame}
-  \frametitle{}
+  \frametitle{Eigenen Check ausdenken}
   \begin{itemize}
-    \item ToDo
+  \item Irgendwas Nützliches \pause  
+  \item Nicht zu kompliziert \pause
+  \item Also: \pause
+    \begin{itemize}
+    \item Floating-Pointe Literale (z.B. \texttt{0.0}) ohne Suffix sind immer \texttt{double}
+    \item Manche (wenige) Entwickler wissen das nicht
+    \item Potentiell Probleme wegen implizieter Typ-Konvertierung
+    \item Wir wollen uns nicht darauf verlassen, das der Compiler alles richtig macht
+    \item Alle Float-Literale sollen einen expliziten cast erhalten:\\
+      \qquad \texttt{0.0} $\rightarrow$ \texttt{static\_cast<double>(0.0)}
+    \item Semantisch keine Änderung
+    \end{itemize}
   \end{itemize}
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Eigenen Check implementieren}
+  \begin{itemize}
+  \item Python-Tool zum Anlegen eines neuen Tests
+  \end{itemize}
+  \begin{lstlisting}[language=bash, basicstyle=\small\ttfamily,keywordstyle=,]
+% ./clang-tidy/add_new_check.py misc explicit-double
+Updating ./clang-tidy/misc/CMakeLists.txt...
+Creating ./clang-tidy/misc/ExplicitDoubleCheck.h...
+Creating ./clang-tidy/misc/ExplicitDoubleCheck.cpp...
+Updating ./clang-tidy/misc/MiscTidyModule.cpp...
+Creating test/clang-tidy/misc-explicit-double.cpp...
+Creating docs/clang-tidy/checks/misc-explicit-double.rst...
+Updating docs/clang-tidy/checks/list.rst...
+Done. Now it's your turn!    
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Generierter Header}
+  \lstinputlisting[firstline=11, language={[11]C++}, basicstyle=\tiny\ttfamily, keywordstyle=\color{blue}]{ExplicitDoubleCheck.h}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Generierter Source}
+  \lstinputlisting[firstline=10, language={[11]C++}, basicstyle=\tiny\ttfamily, keywordstyle=\color{blue}, emph={FIXME}, emphstyle=\color{red}]{ExplicitDoubleCheck.cpp}
+\end{frame}
+
+\begin{frame}
+  \frametitle{API verstehen}
+  \begin{itemize}
+  \item \url{http://clang.llvm.org/docs/LibASTMatchers.html}
+  \item \url{http://clang.llvm.org/docs/LibASTMatchersReference.html\#decl-matchers}
+  \item \url{http://clang.llvm.org/doxygen/classclang_1_1FloatingLiteral.html}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Unsere Implementierung}
+  \lstinputlisting[firstline=25, lastline=41, language={[11]C++}, basicstyle=\tiny\ttfamily, keywordstyle=\color{blue}, emph={FIXME}, emphstyle=\color{red}]{ExplicitDoubleCheck_mod.cpp}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Beispiel}
+  \lstinputlisting[language={[11]C++}, basicstyle=\small\ttfamily, keywordstyle=\color{blue}, emph={FIXME}, emphstyle=\color{red}]{doubles_orig.cpp}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Ausgabe 1 / 2}
+  \begin{lstlisting}[language=bash, basicstyle=\tiny\ttfamily,keywordstyle=,]
+./bin/clang-tidy -checks=misc-explicit-double -fix ../doubles.cpp -- 
+5 warnings generated.
+build/../doubles.cpp:2:18: warning:  found non-double float literal [misc-explicit-double]
+float f_offset = 1.0f;
+                 ^
+build/../doubles.cpp:3:21: warning:  found float literal without d suffix [misc-explicit-double]
+double offset = 42.0;
+                    ^
+                static_cast<double>( )
+build/../doubles.cpp:3:17: note: FIX-IT applied suggested code changes
+double offset = 42.0;
+                ^
+build/../doubles.cpp:3:21: note: FIX-IT applied suggested code changes
+double offset = 42.0;
+                    ^
+build/../doubles.cpp:4:24: warning:  found non-double float literal [misc-explicit-double]
+long double l_offset = 100.0l;
+                       ^
+build/../doubles.cpp:6:35: warning:  found float literal without d suffix [misc-explicit-double]
+double add_abs(double inputVal=1.0)
+                                  ^
+                               static_cast<double>( )
+  \end{lstlisting}
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{Ausgabe 2 / 2}
+  \begin{lstlisting}[language=bash, basicstyle=\tiny\ttfamily,keywordstyle=,]
+build/../doubles.cpp:6:32: note: FIX-IT applied suggested code changes
+double add_abs(double inputVal=1.0)
+                               ^
+build/../doubles.cpp:6:35: note: FIX-IT applied suggested code changes
+double add_abs(double inputVal=1.0)
+                                  ^
+build/../doubles.cpp:8:22: warning:  found float literal without d suffix [misc-explicit-double]
+  if (inputVal >= 0.0) {
+                     ^
+                  static_cast<double>( )
+build/../doubles.cpp:8:19: note: FIX-IT applied suggested code changes
+  if (inputVal >= 0.0) {
+                  ^
+build/../doubles.cpp:8:22: note: FIX-IT applied suggested code changes
+  if (inputVal >= 0.0) {
+                     ^
+clang-tidy applied 6 of 6 suggested fixes.
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Gefixted Beispiel}
+  \lstinputlisting[language={[11]C++}, basicstyle=\small\ttfamily, keywordstyle=\color{blue}, emph={FIXME}, emphstyle=\color{red}]{doubles.cpp}
+\end{frame}
+
 
 \begin{frame}
   \frametitle{Fazit}
@@ -505,6 +619,7 @@ Use -header-filter=.* to display errors from all non-system headers.
       \end{itemize}
     \item[$+$] Vernünftige C++11 API von \texttt{llvm} und \texttt{clang}  
     \item[$-$] Build-Prozess sehr monolitisch, nur zusammen mit \texttt{llvm}
+    \item[$-$] Checks relativ langsam
   \end{itemize}
 \end{frame}
 
@@ -519,6 +634,7 @@ Use -header-filter=.* to display errors from all non-system headers.
       \item \texttt{-fsanitize=signed-integer-overflow} : Prüfe auf Überlauf von Integern
       \end{itemize}
     \item \texttt{klee} : Symbolische Ausführung von LLVM Code
+    \item \texttt{American Fuzz Lop} : Instrumentalisierender Fuzzer 
     \end{itemize}
 \end{frame}
 
