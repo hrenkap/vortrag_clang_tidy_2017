@@ -33,18 +33,41 @@
   \tableofcontents
 \end{frame}
 \section{Einführung}
+\begin{frame}[fragile]
+  \frametitle{Sauberer Code}
+  \begin{lstlisting}[basicstyle=\small\ttfamily,keywordstyle=\color{blue},]
+#include <iostream>
+
+int main(int argc, char* argv[] argv)
+{
+  std::cout << "Clean Code" << std::endl;
+  return 0;
+}
+\end{lstlisting}
+\pause
+\hrule
+% "".join(sorted(open("clean.cpp").read()))
+\begin{lstlisting}[basicstyle=\small\ttfamily,keywordstyle=,]
+"\n\n\n\n\n\n\n\n               \"\"#()*,0::::;;<<<<<>
+CC
+[]
+aaaaaaccccdddddeeeeeegghiiiiilll
+mmnnnnnnnooorrrrrrssstttttttuuuv
+{}"
+\end{lstlisting}
+\end{frame}
+
 \begin{frame}
   \frametitle{Sauberer Code}
   \begin{itemize}
-  \item Was ist sauberer Code?
   \item Sauberkeit ist subjektiv
-    \pause % Bilder (Kinderzimmer?)
+    \pause
   \item Sauberkeit garantiert nicht
     \begin{itemize}
     \item Fehlerfreiheit \pause
-    \item Einhalten der Benutzererwartung \pause
     \item Sicherheit \pause
-    \item Terminierung
+    \item Terminierung \pause
+    \item Einhalten der Benutzererwartung \pause
     \end{itemize}
     \pause
   \item Sauberkeit ist aber hilfreich für
@@ -53,21 +76,25 @@
     \item Fehlersuche \pause
     \item Weiterentwicklung \pause
     \item Kommunikation \pause
-    \item Einarbeitung
+    \item Kooperation
     \end{itemize}
   \end{itemize}
 \end{frame}
+
 \begin{frame}
   \frametitle{Statische Analyse}
   \begin{itemize}
   \item Programme nur anhand des Quelltextes analysieren
     \pause
-  \item Implizit vom Compiler: Warnungen
-    \pause % listing mit gcc warnung
-  \item Früher \texttt{lint} \\
+  \item Implizit vom Compiler
+    \begin{itemize}
+    \item Warnungen \pause 
+    \item Fehlermeldungen \pause
+    \end{itemize}
+  \item Früher \texttt{lint} als Add-on zum Compiler\\
     \qquad \url{https://de.wikipedia.org/wiki/Lint_(Programmierwerkzeug)}
     \pause
-  \item viele kommerzielle Anbieter
+  \item viele kommerzielle Anbieter von ``Test-Tools''
     \begin{itemize}
     \item \href{https://en.wikipedia.org/wiki/Bauhaus_Project_(computing)}{Bauhaus}
     \pause
@@ -79,21 +106,23 @@
     \pause
     \begin{itemize}
     \item \href{https://en.wikipedia.org/wiki/Cpplint}{cpplint}
-    \pause
+      \pause
     \item clang-tidy
       \pause
     \end{itemize}
   \end{itemize}
 \end{frame}
+
 \begin{frame}
   \frametitle{clang-tidy}
   \begin{itemize}
-  \item Projekt innerhalb des llvm-Ökosystems\\
-    \qquad \url{http://llvm.org}
+  \item Projekt innerhalb des llvm-Ökosystems \quad \url{http://llvm.org}
+    \pause
+  \item Unterproject von \texttt{clang}
     \pause
   \item Eher unbekannt
     \pause
-  \item Dokumentation 
+  \item Dokumentation mit Verbesserungspotential
     \pause
   \item Callback Interface für Knoten des abstrakten Syntaxbaums (AST)
     \pause \\
@@ -101,7 +130,7 @@
     \pause
   \item Zugriff auf Preprozessor-Definitionen
     \pause
-  \item Auch Kommentare können direkt ausgelesen werden
+  \item Auch Kommentare können ausgelesen werden
     \pause
   \item Kann Fix-Hints generieren 
     \pause \\
@@ -118,6 +147,7 @@
     % sudo apt-get install clang-tidy-3.9
   \end{lstlisting}
 \end{frame}
+
 \begin{frame}
   \frametitle{Vorbereitung}
   \begin{itemize}
@@ -135,6 +165,7 @@
   \item $\ldots{}$ unpraktisch für größere Projekte
   \end{itemize}
 \end{frame}
+
 \begin{frame}
   \frametitle{Vorbereitung CMake}
   \begin{itemize}
@@ -146,16 +177,17 @@
   \item Kein Build notwendig, \texttt{cmake}-Aufruf genügt
   \end{itemize}
 \end{frame}
-% Auszug aus Datei
+
 \begin{frame}
   \frametitle{Aufrufoptionen für \texttt{clang-tidy}}
   \begin{itemize}
   \item \texttt{-checks=} Liste von durchzuführenden Checks\\
-    \qquad auch mit Wildcards, z.B. \texttt{modernize-*}
+    \qquad auch mit Wildcards, z.B. \texttt{llvm-*}
   \item \texttt{-fix} Eventuelle Fix-Vorschläge gleich auf Sourcen anwenden
   \item \texttt{-p} Pfad zur Compile-Database
   \end{itemize}
 \end{frame}
+
 \begin{itemize}
 \item Alle verfügbaren Checks anzeigen
 \end{itemize}
@@ -358,11 +390,12 @@
     readability-static-definition-in-anonymous-namespace
     readability-uniqueptr-delete-release
   \end{lstlisting}
+
 \begin{frame}
-  \frametitle{Check-Gruppen}
+  \frametitle{Check-Gruppen 1 / 2}
   \begin{itemize}
   \item C++ Core Guilelines\\
-    \qquad \url{https://github.com/isocpp/CppCoreGuidelines}
+    \qquad \url{https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md}
   \item CERT Secure Coding Standards\\
     \qquad \url{https://www.securecoding.cert.org/confluence/display/seccode/SEI+CERT+Coding+Standards}
   \item Google C++ Style Guide\\
@@ -371,8 +404,9 @@
     \qquad \url{http://llvm.org/docs/CodingStandards.html}
   \end{itemize}
 \end{frame}
+
 \begin{frame}
-  \frametitle{Check-Gruppen}
+  \frametitle{Check-Gruppen 2 / 2}
   \begin{itemize}
   \item \texttt{modernize-*} : Modernisierungen, ehemals \texttt{clang-modernize}\\
     Gelegenheiten Code durch modernere Sprachfeatures zu verbessern
@@ -381,6 +415,7 @@
   \item \texttt{misc-*} : Alles ohne bessere Kategorie
   \end{itemize}
 \end{frame}
+
 \begin{frame}[fragile]
   \frametitle{Beispiel}
   \begin{itemize}
@@ -388,14 +423,17 @@
     \texttt{\% clang-tidy -check=modernize-* -fix example.cpp -- -std=c++11}
   \end{itemize}
 \end{frame}
+
 \begin{frame}[fragile]
   \frametitle{Beispiel, Originaldatei 1/2}
 \lstinputlisting[lastline=12, language=C++, basicstyle=\small\ttfamily, keywordstyle=\color{blue}]{example_orig.cpp}
 \end{frame}
+
 \begin{frame}[fragile]
   \frametitle{Beispiel, Originaldatei 2/2}
   \lstinputlisting[firstline=13, language=C++, basicstyle=\small\ttfamily, keywordstyle=\color{blue}]{example_orig.cpp}
 \end{frame}
+
 \begin{frame}[fragile]
   \frametitle{Beispiel, Ausgabe 1/2}
   \begin{lstlisting}[language=bash, basicstyle=\tiny\ttfamily, keywordstyle=]
@@ -427,11 +465,11 @@ example.cpp:16:33: note: FIX-IT applied suggested code changes
   int method(int* val_ptr) const {
                                 ^
 example.cpp:17:24: warning: use nullptr [modernize-use-nullptr]
-    return (val_ptr != NULL ? *val_ptr : 1);
+    return (val_ptr != 0 ? *val_ptr : 1);
                        ^
                        nullptr
 example.cpp:17:24: note: FIX-IT applied suggested code changes
-    return (val_ptr != NULL ? *val_ptr : 1);
+    return (val_ptr != 0 ? *val_ptr : 1);
                        ^
 example.cpp:24:8: warning: auto_ptr is deprecated, use unique_ptr instead [modernize-replace-auto-ptr]
   std::auto_ptr<Base>  base_hold(new Derived());
@@ -455,6 +493,17 @@ Use -header-filter=.* to display errors from all non-system headers.
   \frametitle{Beispiel, modernisierte Datei 2/2}
   \lstinputlisting[firstline=13, language=C++, basicstyle=\small\ttfamily, keywordstyle=\color{blue}, emph={override,unique_ptr,nullptr}, emphstyle=\color{green}]{example.cpp}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Modernisierungen}
+  \begin{itemize}
+  \item \texttt{clang-tidy} versteht Vererbung
+  \item Kann leere Implementierungen erkennen
+  \item Kann erkennen, wann \texttt{0} als Integer oder Pointer gebraucht wird
+  \item Das ist nur schwer mit \texttt{sed} oder \texttt{awk} zu emulieren 
+  \end{itemize}
+\end{frame}
+
 \section{clang-tidy erweitern}
 
 \begin{frame}[fragile]
@@ -472,7 +521,8 @@ Use -header-filter=.* to display errors from all non-system headers.
   % git clone http://llvm.org/git/clang-tools-extra.git extra
   \end{lstlisting}
   \begin{itemize}
-  \item ca. 1,1 GB Plattenplatz
+  \item Sourcen ca. 1,1 GB Plattenplatz
+  \item Build ca. 3 GB Plattenplatz
   \end{itemize}
 \end{frame}
 
@@ -485,6 +535,7 @@ Use -header-filter=.* to display errors from all non-system headers.
     \end{itemize}
   \item Aufruf etwa\\
     \qquad \texttt{\% mkdir build \&\& cd build \&\& cmake --build ../llvm}
+  \item Dauer: \pause viel zu lang
   \end{itemize}  
 \end{frame}
 
@@ -509,7 +560,8 @@ Use -header-filter=.* to display errors from all non-system headers.
 \begin{frame}[fragile]
   \frametitle{Eigenen Check implementieren}
   \begin{itemize}
-  \item Python-Tool zum Anlegen eines neuen Tests
+  \item Früher: Anpassen vieler Dateien \pause
+  \item Heute: Python-Tool zum Anlegen eines neuen Tests
   \end{itemize}
   \begin{lstlisting}[language=bash, basicstyle=\small\ttfamily,keywordstyle=,]
 % ./clang-tidy/add_new_check.py misc explicit-double
@@ -537,6 +589,7 @@ Done. Now it's your turn!
 \begin{frame}
   \frametitle{API verstehen}
   \begin{itemize}
+  \item Konsultiere Online-Dokumentation
   \item \url{http://clang.llvm.org/docs/LibASTMatchers.html}
   \item \url{http://clang.llvm.org/docs/LibASTMatchersReference.html\#decl-matchers}
   \item \url{http://clang.llvm.org/doxygen/classclang_1_1FloatingLiteral.html}
