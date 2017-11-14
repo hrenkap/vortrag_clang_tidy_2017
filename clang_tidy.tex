@@ -23,7 +23,7 @@
   \begin{itemize}
     \item Linux Anwender seit 1995
     \item Studium Informatik und Mathematik in Tübingen
-    \item Sofwareentwickler \texttt{C++}, \texttt{python}, OpenGL
+    \item Softwareentwickler \texttt{C++}, \texttt{python}, OpenGL
     \item regelmäßig auf OpenSource Konferenzen anzutreffen
     \item Programmiersprachenjunkie
   \end{itemize}
@@ -38,7 +38,7 @@
   \begin{lstlisting}[basicstyle=\small\ttfamily,keywordstyle=\color{blue},]
 #include <iostream>
 
-int main(int argc, char* argv[] argv)
+int main(int argc, char* argv[])
 {
   std::cout << "Clean Code" << std::endl;
   return 0;
@@ -75,7 +75,7 @@ mmnnnnnnnooorrrrrrssstttttttuuuv
       \pause
     \item Fehlersuche \pause
     \item Weiterentwicklung \pause
-    \item Kommunikation \pause
+    \item Nachvollziehbarkeit \pause
     \item Kooperation
     \end{itemize}
   \end{itemize}
@@ -86,7 +86,7 @@ mmnnnnnnnooorrrrrrssstttttttuuuv
   \begin{itemize}
   \item Programme nur anhand des Quelltextes analysieren
     \pause
-  \item Implizit vom Compiler
+  \item Implizit vom Compiler \pause
     \begin{itemize}
     \item Warnungen \pause 
     \item Fehlermeldungen \pause
@@ -614,7 +614,7 @@ Done. Now it's your turn!
 build/../doubles.cpp:2:18: warning:  found non-double float literal [misc-explicit-double]
 float f_offset = 1.0f;
                  ^
-build/../doubles.cpp:3:21: warning:  found float literal without d suffix [misc-explicit-double]
+build/../doubles.cpp:3:21: warning:  found double literal [misc-explicit-double]
 double offset = 42.0;
                     ^
                 static_cast<double>( )
@@ -627,7 +627,7 @@ double offset = 42.0;
 build/../doubles.cpp:4:24: warning:  found non-double float literal [misc-explicit-double]
 long double l_offset = 100.0l;
                        ^
-build/../doubles.cpp:6:35: warning:  found float literal without d suffix [misc-explicit-double]
+build/../doubles.cpp:6:35: warning:  found double literal [misc-explicit-double]
 double add_abs(double inputVal=1.0)
                                   ^
                                static_cast<double>( )
@@ -642,7 +642,7 @@ double add_abs(double inputVal=1.0)
 build/../doubles.cpp:6:35: note: FIX-IT applied suggested code changes
 double add_abs(double inputVal=1.0)
                                   ^
-build/../doubles.cpp:8:22: warning:  found float literal without d suffix [misc-explicit-double]
+build/../doubles.cpp:8:22: warning:  found double literal [misc-explicit-double]
   if (inputVal >= 0.0) {
                      ^
                   static_cast<double>( )
